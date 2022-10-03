@@ -1,8 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import storage from 'redux-persist/lib/storage';
-import { persistReducer, persistStore } from 'redux-persist';
+import { persistStore, PERSIST } from 'redux-persist';
+import { persistedContactReducer } from './contactSlice';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-};
+export const store = configureStore({
+  reducer: {
+    contacts: persistedContactReducer,
+  },
+  middleware(getDefaultMiddleware) {
+    return getDefaultMiddleware({
+      serializableCheck: { ignoredActions: [PERSIST] },
+    });
+  },
+});
+
+export const persistor = persistStore(store);
